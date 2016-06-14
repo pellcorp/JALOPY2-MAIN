@@ -9,7 +9,7 @@ package de.hunsicker.jalopy.printer;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.log4j.Level;
+import org.slf4j.event.Level;
 
 import antlr.CommonHiddenStreamToken;
 import antlr.collections.AST;
@@ -2468,8 +2468,7 @@ OUTER:
             out.state.args[4] = new Integer(((Node) tag).getStartLine());
             out.state.args[5] = tag;
                 
-            Loggers.PRINTER_JAVADOC.l7dlog(
-                Level.INFO, "TAG_ADD_MISSING", out.state.args, null);
+            Loggers.PRINTER_JAVADOC.info("TAG_ADD_MISSING", out.state.args, null);
             
         }
         String commentForNode = getNodeComment(lcurly,out,currentFile);
@@ -2489,8 +2488,7 @@ OUTER:
             out.state.args[4] = " (Line "+((Node) tag).getStartLine()+")";
             out.state.args[5] = tag;
                 
-            Loggers.PRINTER_JAVADOC.l7dlog(
-                Level.WARN, "TAG_ADD_MISSING", out.state.args, null);
+            Loggers.PRINTER_JAVADOC.warn("TAG_ADD_MISSING", out.state.args, null);
         }
         else {
             if (!firstComment.getText().equals(commentForNode)){
@@ -2501,8 +2499,7 @@ OUTER:
                 out.state.args[3] = firstComment.getText(); 
                 out.state.args[4] = commentForNode;
                 out.state.args[5] = tag;
-                Loggers.PRINTER_JAVADOC.l7dlog(
-                    Level.WARN, "TAG_MISSPELLED_NAME", out.state.args, null);
+                Loggers.PRINTER_JAVADOC.warn("TAG_MISSPELLED_NAME", out.state.args, null);
                 firstComment.setText(commentForNode);   
             }
             
@@ -2636,8 +2633,7 @@ OUTER:
                 out.state.args[3] = "Unknown code "+new StringBuffer().append(parent); 
                 out.state.args[4] = new StringBuffer().append(parent);
                 out.state.args[5] = tag;
-                Loggers.PRINTER_JAVADOC.l7dlog(
-                    Level.WARN, "GENERATE_COMMENT", out.state.args, null);
+                Loggers.PRINTER_JAVADOC.warn("GENERATE_COMMENT", out.state.args, null);
                     
             }
        }

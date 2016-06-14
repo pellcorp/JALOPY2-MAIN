@@ -28,26 +28,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import de.hunsicker.io.Copy;
-import de.hunsicker.io.ExtensionFilter;
-import de.hunsicker.io.IoHelper;
-import de.hunsicker.jalopy.language.DeclarationType;
-import de.hunsicker.jalopy.language.ModifierType;
-import de.hunsicker.util.ChainingRuntimeException;
-import de.hunsicker.util.StringHelper;
-
-import org.apache.log4j.Level;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-
-//J- needed only as a workaround for a Javadoc bug
-import java.lang.NullPointerException;
-import java.lang.Object;
-
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -59,6 +39,20 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 //J+
+
+import org.slf4j.event.Level;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import de.hunsicker.io.Copy;
+import de.hunsicker.io.ExtensionFilter;
+import de.hunsicker.io.IoHelper;
+import de.hunsicker.jalopy.language.DeclarationType;
+import de.hunsicker.jalopy.language.ModifierType;
+import de.hunsicker.util.ChainingRuntimeException;
+import de.hunsicker.util.StringHelper;
 
 /**
  * Represents a code convention: the settings that describe the desired coding style for
@@ -208,8 +202,7 @@ public final class Convention
                 catch (IOException ex)
                 {
                     Object[] args = { location };
-                    Loggers.IO.l7dlog(
-                        Level.WARN, "PREF_COULD_NOT_CONNECT" /* NOI18N */, args, null);
+                    Loggers.IO.warn("PREF_COULD_NOT_CONNECT" /* NOI18N */, args, null);
                 }
             }
             else
@@ -219,10 +212,10 @@ public final class Convention
         }
         catch (Throwable ex)
         {
-            ex.printStackTrace();
+            //ex.printStackTrace();
 
             Object[] args = { settingsFile };
-            Loggers.IO.l7dlog(Level.WARN, "PREF_ERROR_LOADING" /* NOI18N */, args, ex);
+            Loggers.IO.warn("PREF_ERROR_LOADING" /* NOI18N */, args, ex);
 
             // actually means the build-in defaults will be used
             INSTANCE = EMPTY_PREFERENCES;

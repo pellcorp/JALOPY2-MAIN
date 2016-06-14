@@ -16,20 +16,15 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Level;
+import org.slf4j.event.Level;
 
 import antlr.CommonAST;
-import antlr.Token;
 import antlr.collections.AST;
-
 import de.hunsicker.jalopy.language.JavaNodeHelper;
 import de.hunsicker.jalopy.language.Recognizer;
 import de.hunsicker.jalopy.language.TreeWalker;
-import de.hunsicker.jalopy.language.antlr.ExtendedToken;
-import de.hunsicker.jalopy.language.antlr.JavaLexer;
 import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
-import de.hunsicker.jalopy.language.antlr.JavadocParser;
 import de.hunsicker.jalopy.language.antlr.JavadocTokenTypes;
 import de.hunsicker.jalopy.language.antlr.Node;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
@@ -280,11 +275,7 @@ final class JavadocPrinter extends AbstractPrinter {
 
                 out.print(lines[lines.length - 1], JavadocTokenTypes.JAVADOC_COMMENT);
 
-                Loggers.PRINTER_JAVADOC.l7dlog(
-                    Level.INFO,
-                    KEY_GENERATE_COMMENT,
-                    out.state.args,
-                    null);
+                Loggers.PRINTER_JAVADOC.info(KEY_GENERATE_COMMENT, out.state.args, null);
             } // end if
         } // end if
         else if (!reformatComment) {
@@ -603,11 +594,7 @@ LOOP:
                 out.state.args[3] = "@return" /* NOI18N */;
                 out.state.args[4] = new Integer(((Node)returnNode).getStartLine());
                 returnNode = null;
-                Loggers.PRINTER_JAVADOC.l7dlog(
-                    Level.WARN,
-                    KEY_TAG_REMOVE_OBSOLETE,
-                    out.state.args,
-                    null);
+                Loggers.PRINTER_JAVADOC.warn(KEY_TAG_REMOVE_OBSOLETE, out.state.args, null);
             } // end if
         } // end if
         else {
@@ -740,8 +727,7 @@ LOOP:
                         out.state.args[4] = new Integer(((Node)tag).getStartLine());
                         out.state.args[5] = tag;
 
-                        Loggers.PRINTER_JAVADOC.l7dlog(
-                            Level.WARN,
+                        Loggers.PRINTER_JAVADOC.warn(
                             KEY_TAG_REMOVE_OBSOLETE,
                             out.state.args,
                             null);
@@ -801,8 +787,7 @@ LOOP:
                         out.getIndentLength() + asterix.length() + 1);
                     out.state.args[3] = tagName;
                     out.state.args[4] = name;
-                    Loggers.PRINTER_JAVADOC.l7dlog(
-                        Level.WARN,
+                    Loggers.PRINTER_JAVADOC.warn(
                         KEY_TAG_ADD_MISSING,
                         out.state.args,
                         null);
@@ -941,8 +926,7 @@ LOOP:
             out.state.args[3] = oldName;
             out.state.args[4] = newName;
 
-            Loggers.PRINTER_JAVADOC.l7dlog(
-                Level.WARN,
+            Loggers.PRINTER_JAVADOC.warn(
                 KEY_TAG_MISSPELLED_NAME,
                 out.state.args,
                 null);
@@ -2234,8 +2218,7 @@ SELECTION:
                 out.state.args[2] = new Integer(out.getIndentLength() + asterix.length() + 1);
                 out.state.args[3] = "@return" /* NOI18N */;
                 out.state.args[4] = EMPTY_STRING;
-                Loggers.PRINTER_JAVADOC.l7dlog(
-                    Level.WARN,
+                Loggers.PRINTER_JAVADOC.warn(
                     KEY_TAG_ADD_MISSING,
                     out.state.args,
                     null);

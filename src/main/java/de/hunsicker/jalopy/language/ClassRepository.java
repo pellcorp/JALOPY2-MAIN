@@ -35,8 +35,6 @@ import de.hunsicker.jalopy.storage.Loggers;
 import de.hunsicker.util.ChainingRuntimeException;
 import de.hunsicker.util.StringHelper;
 
-import org.apache.log4j.Level;
-
 
 /**
  * Stores type names for Java packages. This information is needed in order to be able to
@@ -466,7 +464,7 @@ public class ClassRepository
                 }
                 catch (Exception ex)
                 {
-                    ex.printStackTrace();
+                	Loggers.IO.debug("", ex);
 
                     continue;
                 }
@@ -568,7 +566,7 @@ public class ClassRepository
             catch (ClassNotFoundException ex)
             {
                 Object[] args = { path, location };
-                Loggers.IO.l7dlog(Level.WARN, "REPOSITORY_NOT_PACKAGE_ROOT", args, null);
+                Loggers.IO.warn("REPOSITORY_NOT_PACKAGE_ROOT", args, null);
 
                 return false;
             }
@@ -824,8 +822,7 @@ public class ClassRepository
                     if (!files[i].delete())
                     {
                         Object[] args = { files[i] };
-                        Loggers.IO.l7dlog(
-                            Level.INFO, "IMPORT_DELETE_UNUSED_ERR", args, null);
+                        Loggers.IO.info("IMPORT_DELETE_UNUSED_ERR", args, null);
                     }
                 }
             }

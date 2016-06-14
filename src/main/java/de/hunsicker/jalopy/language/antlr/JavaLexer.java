@@ -1,34 +1,28 @@
 package de.hunsicker.jalopy.language.antlr;
 
-// $ANTLR 2.7.4: "java15.g" -> "JavaLexer.java"$
-
-import java.io.IOException;
-import java.io.StringReader;
-
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 
+import antlr.ANTLRHashString;
+import antlr.CharBuffer;
+import antlr.InputBuffer;
+import antlr.LexerSharedInputState;
+import antlr.RecognitionException;
+import antlr.Token;
+import antlr.TokenStreamIOException;
 import de.hunsicker.io.FileFormat;
 import de.hunsicker.jalopy.language.CompositeFactory;
 import de.hunsicker.jalopy.language.JavaParser;
 import de.hunsicker.jalopy.language.Lexer;
 import de.hunsicker.jalopy.language.Parser;
 import de.hunsicker.jalopy.language.Recognizer;
-import de.hunsicker.jalopy.language.CompositeFactory.ExtendedTokenFactory;
-import de.hunsicker.jalopy.language.antlr.InternalJavaLexer;
-import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.util.StringHelper;
-import antlr.InputBuffer;
-import antlr.CharBuffer;
-import antlr.Token;
-import antlr.RecognitionException;
-import antlr.ANTLRHashString;
-import antlr.LexerSharedInputState;
-import antlr.TokenStreamIOException;
 
 public class JavaLexer extends InternalJavaLexer implements Lexer
  {
@@ -56,7 +50,7 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
     private Recognizer _recognizer;
 
     /** Logging. */
-    private Logger _logger = Logger.getLogger("de.hunsicker.jalopy.language.java");
+    private Logger _logger = LoggerFactory.getLogger("de.hunsicker.jalopy.language.java");
 
     /** Should Javadoc comments be parsed or added AS IS? */
     public boolean parseJavadocComments;
@@ -372,15 +366,12 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
         if (this.inputState != null)
         {
             Object[] args = { getFilename(), new Integer(getLine()), new Integer(getColumn()), "JavaLexer: panic" };
-            _logger.l7dlog(Level.FATAL, "PARSER_ERROR", args, null);
+            _logger.error("PARSER_ERROR", args, null);
         }
         else
         {
-            if (_logger == null)
-                _logger = Logger.getLogger("de.hunsicker.jalopy.language.java");
-
             Object[] args = { "???", new Integer(0), new Integer(0), "JavaLexer: panic" };
-            _logger.l7dlog(Level.FATAL, "PARSER_ERROR", args, null);
+            _logger.error("PARSER_ERROR", args, null);
         }
     }
 
@@ -389,15 +380,12 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
         if (this.inputState != null)
         {
             Object[] args = { getFilename(), new Integer(getLine()), new Integer(getColumn()), message };
-            _logger.l7dlog(Level.FATAL, "PARSER_ERROR", args, null);
+            _logger.error("PARSER_ERROR", args, null);
         }
         else
         {
-            if (_logger == null)
-                _logger = Logger.getLogger("de.hunsicker.jalopy.language.java");
-
             Object[] args = { "???", new Integer(0), new Integer(0), message };
-            _logger.l7dlog(Level.FATAL, "PARSER_ERROR", args, null);
+            _logger.error("PARSER_ERROR", args, null);
         }
    }
 
@@ -409,7 +397,7 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
    public void reportError(RecognitionException ex)
    {
       Object[] args = { getFilename(), new Integer(getLine()),new Integer(getColumn()), ex.getMessage() };
-      _logger.l7dlog(Level.ERROR, "PARSER_ERROR", args, ex);
+      _logger.error("PARSER_ERROR", args, ex);
    }
 
    /**
@@ -420,7 +408,7 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
    public void reportError(String message)
    {
        Object[] args = { getFilename(), new Integer(getLine()), new Integer(getColumn()), message };
-       _logger.l7dlog(Level.ERROR, "PARSER_ERROR", args, null);
+       _logger.error("PARSER_ERROR", args, null);
    }
 
    /**
@@ -431,7 +419,7 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
    public void reportWarning(String message)
    {
        Object[] args = { getFilename(), new Integer(getLine()),new Integer(getColumn()), message };
-       _logger.l7dlog(Level.WARN, "PARSER_ERROR", args, null);
+       _logger.warn("PARSER_ERROR", args, null);
    }
 
     /**

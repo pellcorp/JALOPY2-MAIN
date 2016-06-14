@@ -6,9 +6,9 @@
  */
 package de.hunsicker.jalopy.storage;
 
-import de.hunsicker.jalopy.language.JavaParser;
+import org.slf4j.event.Level;
 
-import org.apache.log4j.Level;
+import de.hunsicker.jalopy.language.JavaParser;
 
 
 /**

@@ -5,8 +5,6 @@ package de.hunsicker.jalopy.language.antlr;
 
 {
 import antlr.CommonAST;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
@@ -409,8 +407,6 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Properties;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
 }
 
 /**

@@ -31,8 +31,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.log4j.Level;
-
 /**
  * The Java-specific recognizer. @author <a
  * href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>@version
@@ -595,20 +593,20 @@ public final class JavaRecognizer extends Recognizer
       // further parsing, but we want to provide a savety net
       catch(RecognitionException ex)
       {
-         ex.printStackTrace();
-         if (ex.getCause()!=null) {
-             ex.getCause().printStackTrace();
-         }
+         //ex.printStackTrace();
+         //if (ex.getCause()!=null) {
+         //    ex.getCause().printStackTrace();
+         //}
          throw new ParseException(ex);
       }
       catch(TokenStreamRecognitionException ex)
       {
-         ex.printStackTrace();
+         //ex.printStackTrace();
          throw new ParseException(ex);
       }
       catch(TokenStreamException ex)
       {
-         ex.printStackTrace();
+         //ex.printStackTrace();
          throw new ParseException(ex);
       }
       finally
@@ -682,7 +680,7 @@ public final class JavaRecognizer extends Recognizer
          catch(TransformationException ex)
          {
             Object[] args = {this.parser.getFilename()};
-            Loggers.IO.l7dlog(Level.ERROR, "TRANS_ERROR", args, ex);
+            Loggers.IO.error("TRANS_ERROR", args, ex);
          }
       }
    }

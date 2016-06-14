@@ -1,21 +1,21 @@
 package de.hunsicker.jalopy.language;
 // $ANTLR 2.7.4: "java15.g" -> "JavaParser.java"$
 
-import antlr.ANTLRStringBuffer;
-import antlr.TokenBuffer;
-import antlr.TokenStream;
-import antlr.RecognitionException;
-import antlr.ParserSharedInputState;
-import antlr.collections.AST;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 
+import antlr.ANTLRStringBuffer;
+import antlr.ParserSharedInputState;
+import antlr.RecognitionException;
+import antlr.TokenBuffer;
+import antlr.TokenStream;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.antlr.InternalJavaParser;
 import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
@@ -259,7 +259,7 @@ private Set _qualImports = new HashSet(20); // Set of <String>
 private Set _unqualImports = new HashSet(10); // Set of <String>
 
 /** Logging. */
-private final Logger _logger = Logger.getLogger("de.hunsicker.jalopy.language.java");
+private final Logger _logger = LoggerFactory.getLogger("de.hunsicker.jalopy.language.java");
 
 /** The package name of the parsed source file. */
 private String _packageName = "";
@@ -352,7 +352,7 @@ public AST getParseTree()
 public void reportError(RecognitionException ex)
 {
   Object[] args = { getFilename(), new Integer(ex.line), new Integer(ex.column), ex.getMessage() };
-  _logger.l7dlog(Level.ERROR, "PARSER_ERROR", args, ex);
+  _logger.error("PARSER_ERROR", args, ex);
 }
 
 private final static Integer UNKNOWN_POSITION = new Integer(0);
@@ -364,7 +364,7 @@ private final static Integer UNKNOWN_POSITION = new Integer(0);
 public void reportError(String message)
 {
   Object[] args = { getFilename(), UNKNOWN_POSITION, UNKNOWN_POSITION, message };
-  _logger.l7dlog(Level.ERROR, "PARSER_ERROR", args, null);
+  _logger.error("PARSER_ERROR", args, null);
 }
 
 /**
@@ -374,7 +374,7 @@ public void reportError(String message)
 public void reportWarning(String message)
 {
   Object[] args = { getFilename(), UNKNOWN_POSITION,UNKNOWN_POSITION, message };
-  _logger.l7dlog(Level.WARN, "PARSER_ERROR", args, null);
+  _logger.warn("PARSER_ERROR", args, null);
 }
 
 /**

@@ -26,12 +26,10 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
 import java.text.DateFormat;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Vector;
 import java.util.Map.Entry;
 import java.util.zip.Adler32;
 import java.util.zip.CRC32;
@@ -43,11 +41,8 @@ import de.hunsicker.io.FileFormat;
 import de.hunsicker.io.IoHelper;
 import de.hunsicker.jalopy.language.CodeInspector;
 import de.hunsicker.jalopy.language.CompositeFactory;
-import de.hunsicker.jalopy.language.antlr.JavaNode;
-import de.hunsicker.jalopy.language.antlr.JavaNodeFactory;
 import de.hunsicker.jalopy.language.JavaRecognizer;
-import de.hunsicker.jalopy.language.antlr.Node;
-import de.hunsicker.jalopy.language.NodeFactory;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.printer.NodeWriter;
 import de.hunsicker.jalopy.printer.PrinterFactory;
@@ -57,11 +52,6 @@ import de.hunsicker.jalopy.storage.Environment;
 import de.hunsicker.jalopy.storage.History;
 import de.hunsicker.jalopy.storage.Loggers;
 import de.hunsicker.util.Version;
-
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Level;
-import org.apache.log4j.Priority;
-import org.apache.log4j.spi.LoggingEvent;
 
 
 /**
@@ -234,9 +224,6 @@ public final class Jalopy
     /** Input source reader. */
     private Reader _inputReader;
 
-    /** Appender which <em>spies</em> for logging events. */
-    private final SpyAppender _spy;
-
     /** Run status. */
     State _state = State.UNDEFINED;
 
@@ -306,8 +293,6 @@ public final class Jalopy
         
         _recognizer = new JavaRecognizer(_factory);
         _inspector = new CodeInspector(_issues);
-        _spy = new SpyAppender();
-        Loggers.ALL.addAppender(_spy);
     }
 
     //~ Methods --------------------------------------------------------------------------
@@ -779,8 +764,7 @@ public final class Jalopy
             }
 
             Object[] args = { destination };
-            Loggers.IO.l7dlog(
-                Level.INFO, "FILE_DESTINATION_CREATED" /* NOI18N */, args, null);
+            Loggers.IO.info("FILE_DESTINATION_CREATED" /* NOI18N */, args, null);
         }
 
         _destination = destination;
@@ -840,7 +824,7 @@ public final class Jalopy
         if (input == null)
         {
             /**
-             * @todo Loggers.IO.l7dlog(Level.INFO, "", _args, null);
+             * @todo Loggers.IO.info("", _args, null);
              */
             return;
         }
@@ -890,7 +874,7 @@ public final class Jalopy
         if (input == null)
         {
             /**
-             * @todo Loggers.IO.l7dlog(Level.INFO, "", _args, null);
+             * @todo Loggers.IO.info("", _args, null);
              */
             return;
         }
@@ -1030,8 +1014,8 @@ public final class Jalopy
             if (!isDirty()) // input source up-to-date, no formatting necessary
             {
                 _args[0] = _inputFile;
-                Loggers.IO.l7dlog(
-                    Level.INFO, "FILE_FOUND_HISTORY" /* NOI18N */, _args, null);
+                Loggers.IO.info(
+                   "FILE_FOUND_HISTORY" /* NOI18N */, _args, null);
                 _state = State.OK;
                 cleanup();
 
@@ -1062,12 +1046,12 @@ public final class Jalopy
         catch (Throwable ex)
         {
             _state = State.ERROR;
-            ex.printStackTrace();
+            //ex.printStackTrace();
             _args[0] = _inputFile;
             _args[1] =
                 (ex.getMessage() == null) ? ex.getClass().getName()
                                           : ex.getMessage();
-            Loggers.IO.l7dlog(Level.ERROR, "UNKNOWN_ERROR" /* NOI18N */, _args, ex);
+            Loggers.IO.error("UNKNOWN_ERROR" /* NOI18N */, _args, ex);
         }
         finally {
             //todo add togglable 
@@ -1110,7 +1094,7 @@ public final class Jalopy
                 _args[1] =
                     (ex.getMessage() == null) ? ex.getClass().getName()
                                               : ex.getMessage();
-                Loggers.IO.l7dlog(Level.ERROR, "UNKNOWN_ERROR" /* NOI18N */, _args, ex);
+                Loggers.IO.error("UNKNOWN_ERROR" /* NOI18N */, _args, ex);
             }
         }
         else
@@ -1156,7 +1140,7 @@ public final class Jalopy
         {
             start = System.currentTimeMillis();
             _args[0] = _inputFile;
-            Loggers.IO.l7dlog(Level.DEBUG, "FILE_INSPECT" /* NOI18N */, _args, null);
+            Loggers.IO.debug("FILE_INSPECT" /* NOI18N */, _args, null);
         }
 
         _inspector.inspect(tree, (_outputFile != null) ? _outputFile
@@ -1209,7 +1193,7 @@ public final class Jalopy
                 case FILE_STRING :
                 case FILE_WRITER :
                     _args[0] = _inputFile;
-                    Loggers.IO.l7dlog(Level.INFO, "FILE_PARSE" /* NOI18N */, _args, null);
+                    Loggers.IO.info("FILE_PARSE" /* NOI18N */, _args, null);
                     _recognizer.parse(_inputReader, _inputFile.getAbsolutePath());
 
                     break;
@@ -1223,7 +1207,7 @@ public final class Jalopy
                 case READER_STRING :
                 case READER_WRITER :
                     _args[0] = _inputFile;
-                    Loggers.IO.l7dlog(Level.INFO, "FILE_PARSE" /* NOI18N */, _args, null);
+                    Loggers.IO.info("FILE_PARSE" /* NOI18N */, _args, null);
                     _recognizer.parse(_inputReader, _inputFile.getAbsolutePath());
 
                     break;
@@ -1381,8 +1365,7 @@ public final class Jalopy
 
             if (check && !isDirty()) // input source up-to-date, no formatting necessary
             {
-                Loggers.IO.l7dlog(
-                    Level.INFO, "FILE_FOUND_HISTORY" /* NOI18N */, _args, null);
+                Loggers.IO.info("FILE_FOUND_HISTORY" /* NOI18N */, _args, null);
                 _state = State.OK;
 
                 return false;
@@ -1414,17 +1397,14 @@ public final class Jalopy
                         node = node.getParent();
                     }
                     Object message = entry.getValue();
-            issues[0] = _inputFile.getAbsolutePath();
-            issues[1] = new Integer(node.newLine);
-            issues[2] = new Integer(node.newColumn);
-            issues[3] = message.toString();
-            issues[4] = new Integer(node.getStartLine());
-            issues[5] = node;
-            Loggers.PRINTER.l7dlog(
-                Level.WARN, "CODE_INSPECTOR", issues, null);
+		            issues[0] = _inputFile.getAbsolutePath();
+		            issues[1] = new Integer(node.newLine);
+		            issues[2] = new Integer(node.newColumn);
+		            issues[3] = message.toString();
+		            issues[4] = new Integer(node.getStartLine());
+		            issues[5] = node;
+		            Loggers.PRINTER.warn("CODE_INSPECTOR", issues, null);
                 }
-                
-                
             }
 
             if (_state == State.ERROR)
@@ -1475,20 +1455,19 @@ public final class Jalopy
                 {
                     _args[0] = _inputFile;
                     _args[1] = _backupFile;
-                    Loggers.IO.l7dlog(
-                        Level.DEBUG, "FILE_BACKUP_REMOVE" /* NOI18N */, _args, null);
+                    Loggers.IO.debug("FILE_BACKUP_REMOVE" /* NOI18N */, _args, null);
                 }
             }
         }
         catch (Throwable ex)
         {
-            ex.printStackTrace();
+            //ex.printStackTrace();
             _state = State.ERROR;
             _args[0] = _inputFile;
             _args[1] =
                 (ex.getMessage() == null) ? ex.getClass().getName()
                                           : ex.getMessage();
-            Loggers.IO.l7dlog(Level.ERROR, "UNKNOWN_ERROR" /* NOI18N */, _args, ex);
+            Loggers.IO.error("UNKNOWN_ERROR" /* NOI18N */, _args, ex);
             restore(_inputFile, _backupFile);
         }
         finally
@@ -2034,7 +2013,7 @@ public final class Jalopy
             file.setLastModified(lastmod);
             _args[0] = inputFile;
             _args[1] = file.getAbsolutePath();
-            Loggers.IO.l7dlog(Level.INFO, "FILE_COPY" /* NOI18N */, _args, null);
+            Loggers.IO.info("FILE_COPY" /* NOI18N */, _args, null);
         }
     }
 
@@ -2070,8 +2049,7 @@ public final class Jalopy
                     if (Loggers.IO.isDebugEnabled())
                     {
                         _args[1] = backupFile;
-                        Loggers.IO.l7dlog(
-                            Level.DEBUG, "FILE_COPY" /* NOI18N */, _args, null);
+                        Loggers.IO.debug("FILE_COPY" /* NOI18N */, _args, null);
                     }
 
                     return backupFile;
@@ -2099,8 +2077,7 @@ public final class Jalopy
                     if (Loggers.IO.isDebugEnabled())
                     {
                         _args[1] = backupFile;
-                        Loggers.IO.l7dlog(
-                            Level.DEBUG, "FILE_COPY" /* NOI18N */, _args, null);
+                        Loggers.IO.debug("FILE_COPY" /* NOI18N */, _args, null);
                     }
 
                     return backupFile;
@@ -2183,8 +2160,7 @@ public final class Jalopy
                 {
                     _args[0] = _outputFile.getAbsolutePath();
                     _outputFile = null;
-                    Loggers.IO.l7dlog(
-                        Level.WARN, "FILE_NO_WRITE" /* NOI18N */, _args, null);
+                    Loggers.IO.warn("FILE_NO_WRITE" /* NOI18N */, _args, null);
 
                     return;
                 }
@@ -2217,8 +2193,7 @@ public final class Jalopy
                 {
                     _args[0] = _outputFile.getAbsolutePath();
                     _outputFile = null;
-                    Loggers.IO.l7dlog(
-                        Level.WARN, "FILE_NO_WRITE" /* NOI18N */, _args, null);
+                    Loggers.IO.warn("FILE_NO_WRITE" /* NOI18N */, _args, null);
 
                     return;
                 }
@@ -2322,8 +2297,7 @@ public final class Jalopy
                 }
                 else
                 {
-                    Loggers.IO.l7dlog(
-                        Level.INFO, "FILE_MODIFIED_BUT_SAME" /* NOI18N */, _args, null);
+                    Loggers.IO.info("FILE_MODIFIED_BUT_SAME" /* NOI18N */, _args, null);
                 }
 
                 if (Loggers.IO.isDebugEnabled())
@@ -2432,7 +2406,7 @@ public final class Jalopy
         {
             _args[0] = original.getAbsolutePath();
             _args[1] = backup.getAbsolutePath();
-            Loggers.IO.l7dlog(Level.INFO, "FILE_RESTORE" /* NOI18N */, _args, null);
+            Loggers.IO.info("FILE_RESTORE" /* NOI18N */, _args, null);
 
             try
             {
@@ -2442,8 +2416,7 @@ public final class Jalopy
             }
             catch (IOException ex)
             {
-                Loggers.IO.l7dlog(
-                    Level.FATAL, "FILE_RESTORE_ERROR" /* NOI18N */, _args, ex);
+                Loggers.IO.error("FILE_RESTORE_ERROR" /* NOI18N */, _args, ex);
             }
         }
     }
@@ -2523,63 +2496,4 @@ public final class Jalopy
             return this.name;
         }
     }
-
-
-    /**
-     * Detects whether and what kind of messages were produced during a run. Updates the
-     * state info accordingly.
-     */
-    private final class SpyAppender
-        extends AppenderSkeleton
-    {
-        public SpyAppender()
-        {
-            this.name = "JalopySpyAppender" /* NOI18N */;
-        }
-
-        public void append(LoggingEvent ev)
-        {
-            switch (ev.getLevel().toInt())
-            {
-                case Priority.WARN_INT :
-
-                    if (_state != State.ERROR)
-                    {
-                        _state = State.WARN;
-                    }
-
-                    break;
-
-                case Priority.ERROR_INT :
-                case Priority.FATAL_INT :
-                    _state = State.ERROR;
-
-                    break;
-            }
-        }
-
-
-        public void close()
-        {
-        }
-
-
-        public synchronized void doAppend(LoggingEvent ev)
-        {
-            append(ev);
-        }
-
-
-        public boolean requiresLayout()
-        {
-            return false;
-        }
-
-
-        protected boolean checkEntryConditions()
-        {
-            return true;
-        }
-    }
 }
-

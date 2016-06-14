@@ -1,13 +1,21 @@
 package de.hunsicker.jalopy.language.antlr;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
-import de.hunsicker.jalopy.language.Parser;
-import de.hunsicker.jalopy.language.Recognizer;
-import de.hunsicker.jalopy.language.antlr.*;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 
 import antlr.ASTPair;
 import antlr.MismatchedTokenException;
@@ -17,20 +25,9 @@ import antlr.TokenBuffer;
 import antlr.TokenStream;
 import antlr.TokenStreamException;
 import antlr.collections.AST;
-
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Properties;
+import de.hunsicker.jalopy.language.Parser;
+import de.hunsicker.jalopy.language.Recognizer;
 import de.hunsicker.util.Lcs;
-import java.io.FileInputStream;
-import java.io.File;
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.io.IOException;
-import java.net.URL;
 
 
 /**
@@ -56,20 +53,16 @@ import java.net.URL;
  * </blockquote>
  * </pre>
  *
- * <p>This is an <a href="http://www.antlr.org">ANTLR</a> automated generated
- * file. <strong>DO NOT EDIT</strong> but rather change the associated grammar
- * (<code>java.doc.g</code>) and rebuild.</p>
- *
  * @version 1.0
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  *
  * @see de.hunsicker.jalopy.language.antlr.JavadocLexer
  * @see de.hunsicker.jalopy.language.Recognizer
  */
-public class JavadocParser extends InternalJavadocParser implements Parser{
+public class JavadocParser extends InternalJavadocParser implements Parser {
 
     /** Logging. */
-    private final Logger _logger = Logger.getLogger("de.hunsicker.jalopy.language.javadoc");
+    private final Logger _logger = LoggerFactory.getLogger("de.hunsicker.jalopy.language.javadoc");
 
     /** Holds all valid tag names. */
     private Set _standardTags = new HashSet(); // Set of <String>
@@ -191,7 +184,7 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
         catch (Exception ex)
         {
         	
-        	ex.printStackTrace();
+        	//ex.printStackTrace();
             throw new RuntimeException("failed loading token types file -- JavadocTokenTypes.txt");
         }
     }
@@ -346,7 +339,7 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
         if (name == null) // invalid tag
         {
             Object[] args = { getFilename(), new Integer(_lexer.getLine()), new Integer(_lexer.getColumn()), text };
-            _logger.l7dlog(Level.ERROR, "TAG_INVALID", args, null);
+            _logger.error("TAG_INVALID", args, null);
         }
         else
         {
@@ -356,7 +349,7 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
                 tag.setText(name);
 
                 Object[] args = { getFilename(), new Integer(_lexer.getLine()), new Integer(_lexer.getColumn()), text, name};
-                _logger.l7dlog(Level.WARN, "TAG_MISSPELLED_NAME", args, null);
+                _logger.warn("TAG_MISSPELLED_NAME", args, null);
             }
 
             String t = (String)_tokenTypes.get(type +
@@ -478,7 +471,7 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
        Integer line = new Integer((recognizer!=null?recognizer.getStartLine():0) +ex.getLine());
        Integer column = new Integer((recognizer!=null?recognizer.getStartColumn():0) +ex.getColumn());
       Object args[] = { getFilename(), line, column, ex.getMessage() };
-      _logger.l7dlog(Level.ERROR, "PARSER_ERROR", args, ex);
+      _logger.error("PARSER_ERROR", args, ex);
    }
 
    /**
@@ -489,7 +482,7 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
    public void reportError(String message)
    {
       Object args[]  = { getFilename(), new Integer(_lexer.getLine()), new Integer(_lexer.getColumn()), message };
-      _logger.l7dlog(Level.ERROR, "PARSER_ERROR", args, null);
+      _logger.error("PARSER_ERROR", args, null);
    }
 
    /**
@@ -500,7 +493,7 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
    public void reportWarning(String message)
    {
       Object args[]  = { getFilename(), new Integer(_lexer.getLine()), new Integer(_lexer.getColumn()), message };
-      _logger.l7dlog(Level.WARN, message, args, null);
+      _logger.error(message, args, null);
    }
 
     /**
